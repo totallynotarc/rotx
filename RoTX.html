@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoTX — Roblox Enhancement Suite</title>
+    <meta name="description" content="RoTX enhances your Roblox experience with FPS boost, cinematic shaders, HD shadows, and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #050505;
+            --surface: #0d0d0d;
+            --surface-2: #141414;
+            --border: #1a1a1a;
+            --text: #e0e0e0;
+            --text-dim: #666;
+            --purple: #6d28d9;
+            --purple-glow: rgba(109, 40, 217, 0.3);
+            --green: #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Animated background ────────────────────────── */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(109,40,217,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(109,40,217,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, var(--purple-glow) 0%, transparent 70%);
+            z-index: 0;
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* ── Layout ─────────────────────────────────────── */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── Nav ────────────────────────────────────────── */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--purple); }
+
+        .nav-version {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            background: var(--surface-2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        /* ── Hero ───────────────────────────────────────── */
+        .hero {
+            text-align: center;
+            padding: 100px 0 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 .accent {
+            background: linear-gradient(135deg, #6d28d9, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            max-width: 480px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* ── Download button ────────────────────────────── */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #6d28d9, #5b21b6);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 16px 36px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 30px var(--purple-glow), 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px var(--purple-glow), 0 8px 30px rgba(0,0,0,0.5);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .download-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .download-info {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: #3a3a3a;
+        }
+
+        /* ── Features ───────────────────────────────────── */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 20px 0 80px;
+        }
+
+        .feature {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            border-color: #2a2a2a;
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .feature h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .feature p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .badge-on {
+            background: rgba(34,197,94,0.15);
+            color: var(--green);
+        }
+
+        .badge-off {
+            background: rgba(255,255,255,0.05);
+            color: #555;
+        }
+
+        /* ── Footer ─────────────────────────────────────── */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: #2a2a2a;
+        }
+
+        /* ── Responsive ─────────────────────────────────── */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.4rem; }
+            .hero { padding: 60px 0 40px; }
+            .features { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <nav>
+            <div class="logo">Ro<span>TX</span></div>
+            <div class="nav-version">v1.0</div>
+        </nav>
+
+        <section class="hero">
+            <h1>Enhance your <span class="accent">Roblox</span> experience</h1>
+            <p>FPS boost, cinematic shaders, HD shadows, and more — all in one click. No DLL injection, no bans.</p>
+
+            <a href="./RoTX.exe" download class="download-btn" id="downloadBtn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16"/>
+                </svg>
+                Download RoTX
+            </a>
+            <div class="download-info">Windows only · ~12 MB · No install required</div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <span class="badge badge-off">Off by default</span>
+                <h3>FPS Boost</h3>
+                <p>Uncap your frame rate to get the smoothest gameplay possible.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <span class="badge badge-on">On by default</span>
+                <h3>Cinematic Shader</h3>
+                <p>Warm color grading with boosted saturation for a filmic look.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔲</div>
+                <span class="badge badge-on">On by default</span>
+                <h3>4x MSAA</h3>
+                <p>Forced anti-aliasing to eliminate jagged edges.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌑</div>
+                <span class="badge badge-on">On by default</span>
+                <h3>HD Shadows</h3>
+                <p>Deep, sharp shadows with higher intensity and bias.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔺</div>
+                <span class="badge badge-on">On by default</span>
+                <h3>Vulkan Renderer</h3>
+                <p>Prefer Vulkan API for better GPU utilization.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌿</div>
+                <span class="badge badge-on">On by default</span>
+                <h3>HD Grass</h3>
+                <p>Extended render distance and denser grass strands.</p>
+            </div>
+        </section>
+
+        <footer>
+            RoTX v1.0 · Uses Roblox FFlags + Windows gamma ramp · Not affiliated with Roblox Corporation
+        </footer>
+    </div>
+</body>
+</html>
